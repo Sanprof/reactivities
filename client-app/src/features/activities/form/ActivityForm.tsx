@@ -35,7 +35,7 @@ export const ActivityForm: React.FC<IProps> = ({
     const [activity, setActivity] = useState<IActivity>(initializeForm);
 
     const handleSubmit = () => {
-        if (activity.id.length == 0) {
+        if (activity.id.length === 0) {
             let newActivity = {
                 ...activity,
                 id: uuid(),

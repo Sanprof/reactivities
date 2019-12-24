@@ -12,6 +12,27 @@ import SelectInput from "../../../app/common/form/SelectInput";
 import { category } from "../../../app/common/options/categoryOptions";
 import DateInput from "../../../app/common/form/DateInput";
 import { combineDateAndTime } from "../../../app/common/util/util";
+import {
+    combineValidators,
+    isRequired,
+    hasLengthGreaterThan,
+    composeValidators,
+} from "revalidate";
+
+const validate = combineValidators({
+    title: isRequired({ message: "The event title is required" }),
+    category: isRequired("Category"),
+    description: composeValidators(
+        isRequired("Description"),
+        hasLengthGreaterThan(4)({
+            message: "Description needs to be at least 5 characters",
+        })
+    )(),
+    city: isRequired("City"),
+    venue: isRequired("Venue"),
+    date: isRequired("Date"),
+    time: isRequired("Time"),
+});
 
 interface DetailParams {
     id: string;
@@ -61,9 +82,10 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
             <Grid.Column width={10}>
                 <Segment clearing>
                     <FinalForm
+                        validate={validate}
                         initialValues={activity}
                         onSubmit={handleFinalFormSubmit}
-                        render={({ handleSubmit }) => (
+                        render={({ handleSubmit, invalid, pristine }) => (
                             <Form onSubmit={handleSubmit} loading={loading}>
                                 <Field
                                     name='title'
@@ -115,7 +137,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
                                 />
                                 <Button
                                     loading={submitting}
-                                    disabled={loading}
+                                    disabled={loading || invalid || pristine}
                                     floated='right'
                                     positive
                                     type='submit'

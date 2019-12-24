@@ -115,6 +115,7 @@ class ActivityStore {
             });
             history.push(`/activities/${activity.id}`);
         } catch (error) {
+            toast.error("Problem submitting data");
             console.log(error);
         } finally {
             runInAction("finished editing activity", () => {
@@ -135,7 +136,8 @@ class ActivityStore {
                 this.activityRegistry.delete(id);
             });
         } catch (error) {
-            console.log(error);
+            toast.error("Problem deleteting data");
+            console.log(error.response);
         } finally {
             runInAction("finished deleting activity", () => {
                 this.submitting = false;
